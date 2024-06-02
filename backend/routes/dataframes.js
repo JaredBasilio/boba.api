@@ -4,7 +4,8 @@ const {
     getDataframe,
     updateDataframe,
     deleteDataframe,
-    getSessions
+    getSessions,
+    getActions
 } = require('../controllers/dataframeController')
 
 const router = express.Router();
@@ -13,7 +14,7 @@ const router = express.Router();
 router.get('/', getDataframes);
 
 // GET single dataframe
-router.get('/:id', getDataframe)
+router.get('/:id', getDataframe);
 
 // DELETE dataframe
 router.delete('/:id', deleteDataframe);
@@ -22,7 +23,10 @@ router.delete('/:id', deleteDataframe);
 router.patch('/:id', updateDataframe);
 
 // GET all sessions
-router.get('/:id/sessions', getSessions)
+router.get('/:id/sessions', getSessions);
+
+// GET all actions
+router.get('/:id/actions', getActions);
 
 module.exports = router;
 

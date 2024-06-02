@@ -11,6 +11,10 @@ const actionSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
+    dataframe_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
     action: {
         type: Object,
         requires: true

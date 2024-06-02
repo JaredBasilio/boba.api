@@ -10,7 +10,12 @@ const uuid = require('uuid');
 const getGames = async (req, res) => {
     const games = await Game.find({}).sort({createdAt: -1});
 
-    res.status(200).json(games);
+    const filteredGames = games.map(game => {
+        const { access_key, ...rest } = game._doc;
+        return rest;
+    });
+
+    res.status(200).json(filteredGames);
 }
 
 // get a single game
@@ -27,7 +32,8 @@ const getGame = async (req, res) => {
         return res.status(404).json({error: 'no game found'});
     }
 
-    res.status(200).json(game);
+    const {access_key, ...rest} = game._doc;
+    res.status(200).json(rest);
 }
 
 // create a game
@@ -81,12 +87,29 @@ const deleteGame = async (req, res) => {
         return res.status(400).json({error: 'incorrect access key'});
     }
 
-    const deletedGame = await Game.findOneAndDelete({_id: id});
-    // TODO: delete all dataframes with game id
+    const {original_access_key, ...rest} = await Game.findOneAndDelete({_id: id});
 
-    // TODO: delete all sessions with deleted dataframes
+    // delete all dataframes, sessions, and actions
+    const dataframes = await Dataframe.find({game_id: id});
+    for (const dataframe of dataframes) {
+        const { _id: dataframe_id } = dataframe;
 
-    res.status(200).json(deletedGame);
+        // delete the dataframe
+        await Dataframe.findOneAndDelete({_id: dataframe_id});
+
+        const sessions = await Session.find({ dataframe_id: dataframe_id});
+        for (const session of sessions) {
+            const { _id: session_id } = session;
+
+            // delete the session
+            await Session.findByIdAndDelete({_id: session_id});
+
+            // delete the actions
+            await Action.deleteMany({session_id: session_id});
+        }
+    }
+
+    res.status(200).json(rest);
 }
 
 // update a game
@@ -112,11 +135,11 @@ const updateGame = async (req, res) => {
         return res.status(400).json({error: 'incorrect access key'});
     }
 
-    const updatedGame = await Game.findOneAndUpdate({_id: id}, {
+    const {original_access_key, ...rest} = await Game.findOneAndUpdate({_id: id}, {
         ...req.body
     });
 
-    res.status(200).json(updatedGame);
+    res.status(200).json(rest);
 }
 
 /** Dataframes */

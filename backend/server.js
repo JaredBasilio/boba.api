@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const games = require('./routes/games');
 const dataframes = require('./routes/dataframes');
-const actions = require('./routes/actions');
+const sessions = require('./routes/sessions');
 
 const app = express();
 
@@ -18,8 +18,8 @@ app.use((req, res, next) => {
 
 // routes
 app.use('/api/games', games);
-// app.use('/api/dataframes', dataframes);
-app.use('/api/actions', actions);
+app.use('/api/dataframes', dataframes);
+app.use('/api/sessions', sessions)
 
 // connect to db
 mongoose.connect(process.env.MONGO_URI)
