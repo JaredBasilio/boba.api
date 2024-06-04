@@ -8,12 +8,19 @@ const uuid = require('uuid');
 /** Games */
 // get all games
 const getGames = async (req, res) => {
-    const games = await Game.find({}).sort({createdAt: -1});
+    const author =  req.query.author;
+    let games;
+
+    if (author !== undefined) {
+        games = await Game.find({author: author}).sort({createdAt: -1});
+    } else {
+        games = await Game.find().sort({createdAt: -1});
+    }
 
     const filteredGames = games.map(game => {
-        const { access_key, ...rest } = game._doc;
-        return rest;
-    });
+            const { access_key, ...rest } = game._doc;
+            return rest;
+        });
 
     res.status(200).json(filteredGames);
 }
@@ -146,12 +153,18 @@ const updateGame = async (req, res) => {
 // get all game dataframes
 const getDataframes = async (req, res) => {
     const { id } = req.params;
+    const author =  req.query.author;
+    let dataframes;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'no dataframes found'});
     }
 
-    const dataframes = await Dataframe.find({}).sort({createdAt: -1})
+    if (author !== undefined) {
+        dataframes = await Dataframe.find({author: author}).sort({createdAt: -1})
+    } else {
+        dataframes = await Dataframe.find({}).sort({createdAt: -1})
+    }
 
     res.status(200).json(dataframes);
 }

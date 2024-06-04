@@ -1,6 +1,7 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
-const eventHandler = require('./handlers/eventHandler');
+const path = require('node:path');
+const fs = require('node:fs');
+const { Collection, Client, Events, GatewayIntentBits } = require('discord.js');
 
 const client = new Client({
     intents: [
@@ -11,35 +12,35 @@ const client = new Client({
     ],
 });
 
-eventHandler(client);
+client.commands = new Collection();
+const foldersPath = path.join(__dirname, 'commands');
+const commandFolders = fs.readdirSync(foldersPath);
 
-client.login(process.env.TOKEN)
+for (const folder of commandFolders) {
+	const commandsPath = path.join(foldersPath, folder);
+	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const filePath = path.join(commandsPath, file);
+		const command = require(filePath);
+		if ('data' in command && 'execute' in command) {
+			client.commands.set(command.data.name, command);
+		} else {
+			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+		}
+	}
+}
 
-// client.on('interactionCreate', async (interaction) => {
-    // if (interaction.commandName === 'creategame') {
-    //     const name = interaction.options.get('name').value;
-    //     const description = interaction.options.get('description')?.value;
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
-    //     const response = await fetch('https://bobaapi.up.railway.app/api/games', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify({
-    //             name: name,
-    //             author: 'jared',
-    //             description: description,
-    //         })
-    //     })
-        
-    //     if (response.ok) {
-    //         const data = await response.json();
-    //         interaction.reply({ content: `access key: \`${data.access_key}\`` });
-    //     } else {
-    //         interaction.reply({ content: `Failed to create game: ${response.statusText}` });
-    //     }
-    // }
+for (const file of eventFiles) {
+	const filePath = path.join(eventsPath, file);
+	const event = require(filePath);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
 
-//     const command = interaction.options.get('command').value;
-
-// })
+client.login(process.env.TOKEN);

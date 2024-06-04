@@ -7,7 +7,7 @@ const {
     deleteGame,
     getDataframes,
     createDataframe,
-    createSession
+    createSession,
 } = require('../controllers/gameController')
 
 const router = express.Router();
@@ -31,6 +31,7 @@ router.delete('/:id', deleteGame)
 /** Dataframes */
 // GET all game dataframes
 router.get('/:id/dataframes', getDataframes);
+
 
 // POST a new dataframe
 router.post('/:id/dataframes', createDataframe);
