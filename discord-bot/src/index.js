@@ -1,32 +1,45 @@
 require('dotenv').config();
-
-const { Client, IntentsBitField } = require('discord.js');
+const { Client, GatewayIntentBits } = require('discord.js');
+const eventHandler = require('./handlers/eventHandler');
 
 const client = new Client({
     intents: [
-        IntentsBitField.Flags.Guilds,
-        IntentsBitField.Flags.GuildMembers,
-        IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.MessageContent
-    ]
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+    ],
 });
 
-client.on('ready', (c) => {
-    console.log(`✅ ${c.user.tag} is online`)
-});
-
-client.on('interactionCreate', (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
-
-    if (interaction.commandName === 'help') {
-        interaction.reply('https://docs.google.com/document/d/1LOYGqNL0tc-4rAfZAESvPcWgzTecnK5AD-zb9Ub0dn8/edit?usp=sharing');
-    }
-
-    if (interaction.commandName === 'createGame') {
-        const name = interaction.options.get('name').value;
-        const description = interaction.options.get('description')?.value;
-    }
-    // console.log(interaction.commandName);
-})
+eventHandler(client);
 
 client.login(process.env.TOKEN)
+
+// client.on('interactionCreate', async (interaction) => {
+    // if (interaction.commandName === 'creategame') {
+    //     const name = interaction.options.get('name').value;
+    //     const description = interaction.options.get('description')?.value;
+
+    //     const response = await fetch('https://bobaapi.up.railway.app/api/games', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             name: name,
+    //             author: 'jared',
+    //             description: description,
+    //         })
+    //     })
+        
+    //     if (response.ok) {
+    //         const data = await response.json();
+    //         interaction.reply({ content: `access key: \`${data.access_key}\`` });
+    //     } else {
+    //         interaction.reply({ content: `Failed to create game: ${response.statusText}` });
+    //     }
+    // }
+
+//     const command = interaction.options.get('command').value;
+
+// })
