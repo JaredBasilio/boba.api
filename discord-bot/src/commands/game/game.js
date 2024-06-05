@@ -19,6 +19,10 @@ module.exports = {
             .setDescription('Get All Games'))
         .addSubcommand(subcommand =>
             subcommand
+            .setName('get-user')
+            .setDescription('Get User Games'))
+        .addSubcommand(subcommand =>
+            subcommand
             .setName('update')
             .setDescription('Update a game.'))
         .addSubcommand(subcommand =>

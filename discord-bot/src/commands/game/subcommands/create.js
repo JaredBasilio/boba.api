@@ -32,23 +32,25 @@ module.exports = {
             })
             .then(({response, modalInteraction}) => {
                 const {
+                    _id,
                     name,
                     author,
                     description,
                     access_key,
-                    created_at,
-                    updated_at
+                    createdAt,
+                    updatedAt
                  } = response;
 
                 modalInteraction.reply({
                     content:`
                         Game Creation Successful! Your access_key is \`${access_key}\`.\n
                         Below are the details to your game:\n
+                        id: \`${_id}\`\n
                         name: \`${name}\`\n
                         author: \`${author}\` (This is your profile_id)\n
                         description: \`${description}\`\n
-                        created_at: \`${created_at}\`\n
-                        updated_at \`${updated_at}\`\n`,
+                        created_at: \`${createdAt}\`\n
+                        updated_at \`${updatedAt}\`\n`,
                     ephemeral: true
                 })
             })
