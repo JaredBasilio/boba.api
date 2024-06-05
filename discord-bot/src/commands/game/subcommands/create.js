@@ -1,4 +1,5 @@
 const { createModal } = require('../../../utils/modals/createModal');
+const { request } = require('undici');
 
 module.exports = {
     async execute(interaction) {
@@ -9,10 +10,11 @@ module.exports = {
         interaction
             .awaitModalSubmit({filter, time: 30_000})
             .then(async (modalInteraction) => {
+                await modalInteraction.deferReply();
                 const name = modalInteraction.fields.getTextInputValue('nameInput');
                 const description = modalInteraction.fields.getTextInputValue('descriptionInput');
 
-                const response = await fetch('https://bobaapi.up.railway.app/api/games', {
+                const response = await request('https://bobaapi.up.railway.app/api/games', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -24,33 +26,18 @@ module.exports = {
                     })
                 })
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                const json = await response.body.json();
+
+                if (!json) {
+                    modalInteraction.reply({
+                        content: `Creating Game`,
+                        ephemeral: true
+                    })
                 }
-
-                return { response: response.json(), modalInteraction }
-            })
-            .then(({response, modalInteraction}) => {
-                const {
-                    _id,
-                    name,
-                    author,
-                    description,
-                    access_key,
-                    createdAt,
-                    updatedAt
-                 } = response;
-
-                modalInteraction.reply({
+            
+                modalInteraction.editReply({
                     content:`
-                        Game Creation Successful! Your access_key is \`${access_key}\`.\n
-                        Below are the details to your game:\n
-                        id: \`${_id}\`\n
-                        name: \`${name}\`\n
-                        author: \`${author}\` (This is your profile_id)\n
-                        description: \`${description}\`\n
-                        created_at: \`${createdAt}\`\n
-                        updated_at \`${updatedAt}\`\n`,
+                        Game Creation Successful! Your access_key is \`${json.access_key}\`.\nBelow are the details to your game:\nid: \`${json._id}\`\nname: \`${json.name}\`\nauthor: \`${json.author}\` (This is your profile_id)\ndescription: \`${json.description}\`\ncreated_at: \`${json.createdAt}\`\nupdated_at \`${json.updatedAt}\`\n`,
                     ephemeral: true
                 })
             })
@@ -59,3 +46,29 @@ module.exports = {
             });
     }
 }
+
+// .then(({response, modalInteraction}) => {
+//     console.log(response);
+//     const {
+//         _id,
+//         name,
+//         author,
+//         description,
+//         access_key,
+//         createdAt,
+//         updatedAt
+//      } = response;
+
+//     modalInteraction.reply({
+//         content:`
+//             Game Creation Successful! Your access_key is \`${access_key}\`.
+//             Below are the details to your game:
+//             id: \`${_id}\`
+//             name: \`${name}\`
+//             author: \`${author}\` (This is your profile_id)
+//             description: \`${description}\`
+//             created_at: \`${createdAt}\`
+//             updated_at \`${updatedAt}\``,
+//         ephemeral: true
+//     })
+// })

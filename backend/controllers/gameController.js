@@ -217,7 +217,7 @@ const createDataframe = async (req, res) => {
 /** Sessions */
 // create session
 const createSession = async (req, res) => {
-    const { dataframe_id, player, access_key } = req.body;
+    const { dataframe_ids, player, access_key } = req.body;
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -240,12 +240,18 @@ const createSession = async (req, res) => {
 
     // add doc to db
     try {
-        const session = await Session.create({
-            player,
-            dataframe_id
-        })
+        const sessions = []
+        const id = mongoose.Types.ObjectId();
+        for (const dataframe_id of dataframe_id) {
+            const session = await Session.create({
+                _id: id,
+                player,
+                dataframe_id
+            })
+            sessions.push(session);
+        }
 
-        res.status(200).json(session);
+        res.status(200).json(sessions);
     } catch (error) {
         res.status(400).json({
             error: error.message

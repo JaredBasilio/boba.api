@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const sessionSchema = new Schema({
     _id: {
         type: mongoose.Schema.Types.ObjectId,
-        auto: true
+        required: true
     },
     player: {
         type: String,
