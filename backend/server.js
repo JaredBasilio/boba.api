@@ -11,6 +11,7 @@ const app = express();
 
 // middleware
 app.use(express.json())
+app.use(cors());
 
 app.use((req, res, next) => {
     console.log(req.path, req.method)
@@ -22,15 +23,6 @@ app.use('/api/games', games);
 app.use('/api/dataframes', dataframes);
 app.use('/api/sessions', sessions)
 
-// Use the CORS middleware
-app.use(cors({
-    origin: true, // Allow requests from this origin
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Allow these HTTP methods
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-}));
-
-app.options('*', cors());
 
 // connect to db
 mongoose.connect(process.env.MONGO_URI)
