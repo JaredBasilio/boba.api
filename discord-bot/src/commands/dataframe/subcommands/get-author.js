@@ -6,7 +6,7 @@ module.exports = {
         await interaction.deferReply();
         const authorId = interaction.options.getUser('author').id;
 
-        const response = await request(`https://bobaapi.up.railway.app/api/dataframes`, {
+        const response = await request(`https://bobaapi.up.railway.app/api/dataframes?author=${authorId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

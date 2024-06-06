@@ -63,7 +63,7 @@ module.exports = {
                         .setRequired(true)
                 )
                 .addStringOption(option => 
-                    option.setName('access_key')
+                    option.setName('access-key')
                         .setDescription('The access_key for the game.')
                         .setRequired(true)
                 ))

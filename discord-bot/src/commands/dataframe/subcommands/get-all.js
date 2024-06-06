@@ -22,7 +22,6 @@ module.exports = {
 
         const json = await response.body.json();
 
-        console.log(json);
         if (!json.length) {
             interaction.reply('No Dataframes Found!');
         }

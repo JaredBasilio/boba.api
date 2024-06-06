@@ -39,7 +39,13 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
             .setName('actions')
-            .setDescription('Get all actions of a dataframe')) 
+            .setDescription('Get all actions of a dataframe')
+            .addStringOption(option => 
+                option.setName('dataframe-id')
+                .setDescription('Dataframe we want to get the games of.')
+                .setRequired(true)
+            )
+        )
         ,
     async execute(interaction) {
         if (!interaction.isChatInputCommand()) return;

@@ -25,5 +25,9 @@ module.exports = {
         // Concatenate date and time
         const readableDateTime = `${readableDate}, ${readableTime}`;
         return readableDateTime;
+    },
+    generateFileName(username, dataframeId) {
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // Replace colons and periods for filesystem compatibility
+        return `${username}_${dataframeId}_${timestamp}.json`;
     }
 }
