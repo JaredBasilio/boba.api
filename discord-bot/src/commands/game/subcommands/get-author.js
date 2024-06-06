@@ -4,12 +4,13 @@ const { formatReadableDateTime } = require('../../../utils/convertTime');
 module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
+        const userId = interaction.options.getUser('user').id;
 
-        const response = await request('https://bobaapi.up.railway.app/api/games', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+        const response = await request(`https://bobaapi.up.railway.app/api/games?author=${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
         })
 
         const json = await response.body.json();

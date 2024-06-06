@@ -30,7 +30,7 @@ module.exports = {
 
                 if (!json) {
                     modalInteraction.reply({
-                        content: `Creating Game`,
+                        content: `There was an issue creating your game.`,
                         ephemeral: true
                     })
                 }
@@ -46,29 +46,3 @@ module.exports = {
             });
     }
 }
-
-// .then(({response, modalInteraction}) => {
-//     console.log(response);
-//     const {
-//         _id,
-//         name,
-//         author,
-//         description,
-//         access_key,
-//         createdAt,
-//         updatedAt
-//      } = response;
-
-//     modalInteraction.reply({
-//         content:`
-//             Game Creation Successful! Your access_key is \`${access_key}\`.
-//             Below are the details to your game:
-//             id: \`${_id}\`
-//             name: \`${name}\`
-//             author: \`${author}\` (This is your profile_id)
-//             description: \`${description}\`
-//             created_at: \`${createdAt}\`
-//             updated_at \`${updatedAt}\``,
-//         ephemeral: true
-//     })
-// })

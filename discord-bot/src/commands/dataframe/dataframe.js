@@ -37,7 +37,6 @@ module.exports = {
     async execute(interaction) {
         if (!interaction.isChatInputCommand()) return;
 
-        
         const command = interaction.options.getSubcommand();
         const subcommandPath = path.join(__dirname, `subcommands/${command}.js`);
         const { execute } = require(subcommandPath);

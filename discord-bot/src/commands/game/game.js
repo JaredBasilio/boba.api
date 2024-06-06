@@ -19,24 +19,54 @@ module.exports = {
             .setDescription('Get All Games'))
         .addSubcommand(subcommand =>
             subcommand
-            .setName('get-user')
-            .setDescription('Get User Games'))
+            .setName('get-author')
+            .setDescription('Get Games by Author')
+            .addUserOption(option => 
+                option.setName('user')
+                .setDescription('User we want to see the games of.')
+                .setRequired(true)
+            ))
         .addSubcommand(subcommand =>
             subcommand
             .setName('update')
-            .setDescription('Update a game.'))
+            .setDescription('Update a game.')
+            .addStringOption(option => 
+                option.setName('access_key')
+                    .setDescription('The access_key for the game.')
+                    .setRequired(true)
+            ))
         .addSubcommand(subcommand =>
             subcommand
             .setName('delete')
-            .setDescription('Delete a game.'))
+            .setDescription('Delete a game.')
+            .addStringOption(option => 
+                option.setName('access_key')
+                    .setDescription('The access_key for the game.')
+                    .setRequired(true)
+            ))
         .addSubcommand(subcommand =>
             subcommand
             .setName('dataframes')
-            .setDescription('Get the dataframes of a game.'))
+            .setDescription('Get the dataframes of a game.')
+            .addStringOption(option => 
+                option.setName('game-id')
+                    .setDescription('The game we want to add a dataframe to.')
+                    .setRequired(true)
+            ))
         .addSubcommand(subcommand =>
             subcommand
-            .setName('create-dataframe')
-            .setDescription('Create a dataframe for a game.'))
+                .setName('create-dataframe')
+                .setDescription('Create a dataframe for a game.')
+                .addStringOption(option => 
+                    option.setName('game-id')
+                        .setDescription('The game we want to add a dataframe to.')
+                        .setRequired(true)
+                )
+                .addStringOption(option => 
+                    option.setName('access_key')
+                        .setDescription('The access_key for the game.')
+                        .setRequired(true)
+                ))
         ,
     async execute(interaction) {
         if (!interaction.isChatInputCommand()) return;
