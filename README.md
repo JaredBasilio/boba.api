@@ -18,7 +18,7 @@ Feel free to raise any issues or improvements that could potentially be implemen
  - [How to implememnt actions]
  - [Features and Commands]
 
-## How to implement sessions.
+## 🤝 How to implement sessions.
 Each game should prompt users to input their name/id for future references. This is where ultimately our session will start. Using the below script written in javascript will prompt the start of the session. 
 The session id (returned as as the _id variable) should be stored somewhere in your project globally to be used as a reference when making actions.
 ```
@@ -45,10 +45,10 @@ try {
 }
 ```
 
-## How to log actions.
+## 📍 How to log actions.
 Given your session id, we can log actions for a game where appropriate. Using the below script will save an action by the user
 
-## Features and Commands
+## ✏️ Features and Commands
 * /game create
 * /game get game_id
 * /game get-all
