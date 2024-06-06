@@ -27,7 +27,7 @@ const dataframe_ids = ARRAY_OF_DATAFRAME;
 const access_key = ACCESS_KEY_FOR_GAME;
 const player = PLAYER_OF_SESSION;
 try {
-  const response = await fetch(`http://localhost:4000/api/games/${game_id}/sessions`, {
+  const response = await fetch(`https://bobaapi.up.railway.app/api/games/${game_id}/sessions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ try {
       access_key
     })})
   const sessions = await response.json();
-  const { _id } = sessions;
+  const { _id } = sessions[0];
   // Save the _id somewhere that can be accessed throughout the game.
 } catch (err) {
   console.log(err);
@@ -46,7 +46,31 @@ try {
 ```
 
 ## 📍 How to log actions.
-Given your session id, we can log actions for a game where appropriate. Using the below script will save an action by the user
+Given your session id, we can log actions for a game where appropriate. Using the below script will save an action by the user:
+```
+try {
+ const session_id = ... // Get the session_id from your global variable
+ const access_key = ... // Access key for game
+ const dataframe_id = ... // id for the dataframe you wishe to upload to
+ const action = ... // obj that matches the schema when creating the dataframe
+ const response = await fetch(`https://bobaapi.up.railway.app/api/sessions/${session_id}`, {
+  method: 'POST',
+  headers: {
+   'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+   access_key,
+   action,
+   dataframe_id,
+  })
+ });
+ 
+ const responseJson = await response.json()
+ console.log(`Logged Action: ${JSON.stringify(responseJson)}`)
+} catch (err) {
+ console.log(err);
+}
+```
 
 ## ✏️ Features and Commands
 * /game create
