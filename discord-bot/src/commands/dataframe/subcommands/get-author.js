@@ -4,16 +4,9 @@ const { formatReadableDateTime } = require('../../../utils/convertTime');
 module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
-        const game_id = interaction.options.getString('game');
+        const authorId = interaction.options.getUser('author').id;
 
-        let url;
-        if (!game_id) {
-            url = 'https://bobaapi.up.railway.app/api/dataframes'
-        } else {
-            url = `https://bobaapi.up.railway.app/api/games/${game_id}/dataframes`
-        }
-
-        const response = await request(url, {
+        const response = await request(`https://bobaapi.up.railway.app/api/dataframes`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

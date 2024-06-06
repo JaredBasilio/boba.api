@@ -22,8 +22,8 @@ module.exports = {
             .setName('get-author')
             .setDescription('Get Games by Author')
             .addUserOption(option => 
-                option.setName('user')
-                .setDescription('User we want to see the games of.')
+                option.setName('author')
+                .setDescription('Author we want to see the games of.')
                 .setRequired(true)
             ))
         .addSubcommand(subcommand =>

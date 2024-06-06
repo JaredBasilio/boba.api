@@ -8,11 +8,18 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
             .setName('get-all')
-            .setDescription('Get all dataframes.'))
+            .setDescription('Get all dataframes or the dataframes of a game.')
+            .addStringOption(option => option.setName('game').setDescription('Game we want dataframes from.')))
         .addSubcommand(subcommand =>
             subcommand
-            .setName('get-user')
-            .setDescription('Get user dataframes.'))
+            .setName('get-author')
+            .setDescription('Get dataframes by author.')
+            .addUserOption(option => 
+                option.setName('author')
+                .setDescription('Author we want to see the games of.')
+                .setRequired(true)
+            )
+        )
         .addSubcommand(subcommand =>
             subcommand
             .setName('get')

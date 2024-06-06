@@ -17,17 +17,17 @@ module.exports = {
             interaction.reply('No Games Found!');
         }
 
-        let reply = '';
-        for (const game of json) {
-            reply += `**Id**: ${game._id}\n`
-            reply += `**Name**: ${game.name}\n`
-            reply += `**Description**: ${game?.description || ''}\n`
-            reply += `**Author**: ${game.author}\n`
-            reply += `**Created At**: ${formatReadableDateTime(game.createdAt)}\n`
-            reply += `**Updated At**: ${formatReadableDateTime(game.updatedAt)}\n`
-            reply += `====\n`
-        }
-
+        const reply = json.map((game) => {
+            let game_string = '';
+            game_string += `**Id**: ${game._id}\n`
+            game_string += `**Name**: ${game.name}\n`
+            game_string += `**Description**: ${game?.description || ''}\n`
+            game_string += `**Author**: ${game.author}\n`
+            game_string += `**Created At**: ${formatReadableDateTime(game.createdAt)}\n`
+            game_string += `**Updated At**: ${formatReadableDateTime(game.updatedAt)}\n`
+            game_string += `====\n`
+            return game_string;
+        }).join(`====\n`);
         
         let i = 0;
         interaction.editReply(reply.slice(i,i + 2000));

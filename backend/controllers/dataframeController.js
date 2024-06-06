@@ -45,7 +45,13 @@ const deleteDataframe = async (req, res) => {
 }
 
 const getDataframes = async (req, res) => {
-    const dataframes = await Dataframe({}).sort({ createdAt: -1 })
+    const author =  req.query.author;
+    let dataframes;
+    if (author !== undefined) {
+        dataframes = await Dataframe({author: author}).sort({ createdAt: -1 })
+    } else {
+        dataframes = await Dataframe({}).sort({ createdAt: -1 })
+    }
 
     res.status(200).json(dataframes);
 }
