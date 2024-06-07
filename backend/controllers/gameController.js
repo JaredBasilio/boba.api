@@ -287,5 +287,6 @@ module.exports = {
     updateGame,
     getDataframes,
     createDataframe,
-    createSession
+    createSession,
+    checkAccessKey
 }

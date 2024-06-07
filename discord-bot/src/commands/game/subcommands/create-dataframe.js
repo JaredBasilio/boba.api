@@ -9,6 +9,8 @@ module.exports = {
         const id = interaction.options.getString('game-id');
         const accessKey = interaction.options.getString('access-key');
 
+        const accessResponse = await request()
+
         createModal(interaction, 'dataframe', schema=true);
         
         const filter = (interaction) => interaction.customId === `create-dataframe`
@@ -24,7 +26,7 @@ module.exports = {
                 const formattedSchema = schema.split(',').map(item => item.trim());
 
                 // validates and uploads dataframe
-                const response = await request(`https://bobaapi.up.railway.app/api/games/${id}/dataframes`, {
+                const createResponse = await request(`https://bobaapi.up.railway.app/api/games/${id}/dataframes`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -38,7 +40,7 @@ module.exports = {
                     })
                 })
 
-                const json = await response.body.json();
+                const json = await createResponse.body.json();
 
                 if (!json) {
                     modalInteraction.reply({
