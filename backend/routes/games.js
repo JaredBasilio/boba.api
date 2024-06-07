@@ -21,7 +21,7 @@ router.get('/', getGames)
 router.get('/:id', getGame)
 
 // GET check access key
-router.get('/:id', checkAccessKey)
+router.get('/:id/check-access', checkAccessKey)
 
 // POST new game
 router.post('/', createGame);
