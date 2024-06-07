@@ -1,13 +1,14 @@
-const { createModal } = require('../../../utils/modals/createModal');
+const { inputModal } = require('../../../utils/modals/inputModal');
 const { request } = require('undici');
 const { formatReadableDateTime } = require('../../../utils/convertTime');
 
 module.exports = {
     async execute(interaction) {
         const user = interaction.user.id;
-        createModal(interaction, 'game');
+        inputModal(interaction, 'game');
         
         const filter = (interaction) => interaction.customId === `create-game`
+        
         interaction
             .awaitModalSubmit({filter, time: 30_000})
             .then(async (modalInteraction) => {
@@ -38,7 +39,7 @@ module.exports = {
             
                 modalInteraction.editReply({
                     content:`
-                        Game Creation Successful! Your access_key is \`${json.access_key}\`.\nBelow are the details to your game:\nid: \`${json._id}\`\nname: \`${json.name}\`\nauthor: \`${json.author}\` (This is your profile_id)\ndescription: \`${json.description}\`\ncreated_at: \`${formatReadableDateTime(json.createdAt)}\`\nupdated_at \`${formatReadableDateTime(json.updatedAt)}\`\n`,
+                        Game Creation Successful! Your access_key is \`${json.access_key}\`.\nBelow are the details to your game:\nid: \`${json._id}\`\nname: \`${json.name}\`\nauthor: \`${json.author}\` (This is your profile_id)\ndescription: \`${json.description || ''}\`\ncreated_at: \`${formatReadableDateTime(json.createdAt)}\`\nupdated_at \`${formatReadableDateTime(json.updatedAt)}\`\n`,
                     ephemeral: true
                 })
             })

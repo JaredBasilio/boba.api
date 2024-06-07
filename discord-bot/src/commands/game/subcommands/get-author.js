@@ -20,20 +20,20 @@ module.exports = {
 
         const reply = json.map((game) => {
             let game_string = '';
-            game_string += `**Id**: ${game._id}\n`
-            game_string += `**Name**: ${game.name}\n`
-            game_string += `**Description**: ${game?.description || ''}\n`
-            game_string += `**Author**: ${game.author}\n`
-            game_string += `**Created At**: ${formatReadableDateTime(game.createdAt)}\n`
-            game_string += `**Updated At**: ${formatReadableDateTime(game.updatedAt)}\n`
+            game_string += `Id: ${game._id}\n`
+            game_string += `Name: ${game.name}\n`
+            game_string += `Description: ${game?.description || ''}\n`
+            game_string += `Author: ${game.author}\n`
+            game_string += `Created At: ${formatReadableDateTime(game.createdAt)}\n`
+            game_string += `Updated At: ${formatReadableDateTime(game.updatedAt)}\n`
             return game_string;
         }).join(`====\n`);
         
         let i = 0;
-        interaction.editReply(reply.slice(i,i + 2000));
-        i += 2000;
-        for (; i < reply.length; i += 2000) {
-            interaction.followUp(reply.slice(i,i + 2000));
+        interaction.editReply(`\`\`\`\n${reply.slice(i,i + 1950)}\n\`\`\``);
+        i += 1950;
+        for (; i < reply.length; i += 1950) {
+            interaction.followUp(`\`\`\`\n${reply.slice(i,i + 1950)}\n\`\`\``);
         }
     }
 }

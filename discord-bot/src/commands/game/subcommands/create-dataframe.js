@@ -1,4 +1,4 @@
-const { createModal } = require('../../../utils/modals/createModal');
+const { inputModal } = require('../../../utils/modals/inputModal');
 const { formatReadableDateTime } = require('../../../utils/convertTime');
 const { request } = require('undici');
 
@@ -21,19 +21,12 @@ module.exports = {
 
         const accessJson = await accessResponse.body.json();
 
-        if (!accessJson) {
-            interaction.reply({
-                content: `There was an issue checking for access`,
-            })
-        }
-
         if (!accessJson.hasAccess) {
-            interaction.editReply({
-                content:`
-                    Dataframe Creation Successful! Below are the details to your game:\nid: \`${json._id}\`\nname: \`${json.name}\`\nauthor: \`${json.author}\` (This is your profile_id)\ndescription: \`${json.description}\`\nschema: \`${formattedSchema}\`\ngame_id: \`${json.game_id}\`\ncreated_at: \`${formatReadableDateTime(json.createdAt)}\`\nupdated_at \`${formatReadableDateTime(json.updatedAt)}\`\n`,
+            interaction.reply({
+                content:`User does not have access to create dataframe for game \`${id}\``,
             })
         } else {
-            createModal(interaction, 'dataframe', schema=true);
+            inputModal(interaction, 'dataframe', {schema: true});
             
             const filter = (interaction) => interaction.customId === `create-dataframe`
 

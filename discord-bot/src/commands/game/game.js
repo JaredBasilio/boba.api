@@ -12,7 +12,13 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
             .setName('get')
-            .setDescription('Get a single game.'))
+            .setDescription('Get a single game.')
+            .addStringOption(option => 
+                option.setName('game-id')
+                    .setDescription('The game we want to get.')
+                    .setRequired(true)
+                    .setAutocomplete(true)
+            ))
         .addSubcommand(subcommand =>
             subcommand
             .setName('get-all')
@@ -34,6 +40,7 @@ module.exports = {
                 option.setName('game-id')
                     .setDescription('The game we want to update.')
                     .setRequired(true)
+                    .setAutocomplete(true)
             )
             .addStringOption(option => 
                 option.setName('access-key')
@@ -44,6 +51,12 @@ module.exports = {
             subcommand
             .setName('delete')
             .setDescription('Delete a game.')
+            .addStringOption(option => 
+                option.setName('game-id')
+                    .setDescription('The game we want to delete.')
+                    .setRequired(true)
+                    .setAutocomplete(true)
+            )
             .addStringOption(option => 
                 option.setName('access-key')
                     .setDescription('The access_key for the game.')
@@ -57,6 +70,7 @@ module.exports = {
                 option.setName('game-id')
                     .setDescription('The game we want to add a dataframe to.')
                     .setRequired(true)
+                    .setAutocomplete(true)
             ))
         .addSubcommand(subcommand =>
             subcommand
