@@ -26,7 +26,6 @@ module.exports = {
             game_string += `**Author**: ${game.author}\n`
             game_string += `**Created At**: ${formatReadableDateTime(game.createdAt)}\n`
             game_string += `**Updated At**: ${formatReadableDateTime(game.updatedAt)}\n`
-            game_string += `====\n`
             return game_string;
         }).join(`====\n`);
         

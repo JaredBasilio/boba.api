@@ -8,6 +8,7 @@ const {
     getDataframes,
     createDataframe,
     createSession,
+    checkAccessKey
 } = require('../controllers/gameController')
 
 const router = express.Router();
@@ -18,6 +19,9 @@ router.get('/', getGames)
 
 // GET single game
 router.get('/:id', getGame)
+
+// GET check access key
+router.get('/:id', checkAccessKey)
 
 // POST new game
 router.post('/', createGame);

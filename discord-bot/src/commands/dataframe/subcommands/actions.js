@@ -18,17 +18,20 @@ module.exports = {
         })
 
         const json = await response.body.json();
+
+        if (!json.length) {
+            interaction.reply('No Actions Found!');
+        }
+
         const jsonString = JSON.stringify(json, null, 2);
+
 
         const filePath = generateFileName(caller, dataframe_id)
 
-        fs.writeFileSync(filePath, jsonString, 'utf8');
+        const buffer = Buffer.from(jsonString, 'utf8');
 
-        const file = new AttachmentBuilder(filePath);
-        interaction.editReply({content: `Here are the actions for dataframe: \`${dataframe_id}\``, files: [file]})
+        const file = new AttachmentBuilder(buffer, { name: filePath} );
 
-        // if (!json.length) {
-        //     interaction.reply('No Actions Found!');
-        // }
+        interaction.editReply({content: `Actions for dataframe: \`${dataframe_id}\``, files: [file]})
     }
 }

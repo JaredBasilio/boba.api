@@ -43,6 +43,26 @@ const getGame = async (req, res) => {
     res.status(200).json(rest);
 }
 
+// check access key
+const checkAccessKey = async (req, res) => {
+    const { id } = req.params;
+    const { access_key } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'no game found'});
+    }
+
+    const game = await Game.findById(id)
+
+    if (!game) {
+        return res.status(404).json({error: 'no game found'});
+    }
+    
+    res.status(200).json({
+        hasAccess: game.access_key === access_key
+    })
+}
+
 // create a game
 const createGame = async (req, res) => {
     const {name, author, description} = req.body;

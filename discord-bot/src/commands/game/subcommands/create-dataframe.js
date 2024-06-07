@@ -54,5 +54,23 @@ module.exports = {
             .catch((err) => {
                 console.log(`Error: ${err}`)
             });
+    },
+    async autocomplete(interaction) {
+        const option = interaction.options.getFocused(true).name;
+        if (option === 'game-id') {
+            const response = await request('https://bobaapi.up.railway.app/api/games', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            const json = await response.body.json();
+
+            return json.map((game) => ({
+                name: game.name,
+                value: game._id
+            }))
+        }
+        return [];
     }
 }

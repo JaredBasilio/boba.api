@@ -9,7 +9,7 @@ module.exports = {
             subcommand
             .setName('get-all')
             .setDescription('Get all dataframes or the dataframes of a game.')
-            .addStringOption(option => option.setName('game').setDescription('Game we want dataframes from.')))
+            .addStringOption(option => option.setName('game-id').setDescription('Game we want dataframes from.')))
         .addSubcommand(subcommand =>
             subcommand
             .setName('get-author')
@@ -23,19 +23,52 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
             .setName('get')
-            .setDescription('Get a single dataframe.'))
+            .setDescription('Get a single dataframe.')
+            .addStringOption(option => 
+                option.setName('dataframe-id')
+                .setDescription('Dataframe we want to get the games of.')
+                .setRequired(true)
+            )
+        )
         .addSubcommand(subcommand =>
             subcommand
             .setName('delete')
-            .setDescription('Delete a dataframe.'))
+            .setDescription('Delete a dataframe.')
+            .addStringOption(option => 
+                option.setName('dataframe-id')
+                .setDescription('Dataframe we want to get the games of.')
+                .setRequired(true)
+            )
+            .addStringOption(option => 
+                option.setName('access-key')
+                .setDescription('The access key for the dataframe game we are modifying.')
+                .setRequired(true)
+            )
+        )
         .addSubcommand(subcommand =>
             subcommand
             .setName('update')
-            .setDescription('Update a dataframe.'))
+            .setDescription('Update a dataframe.')
+            .addStringOption(option => 
+                option.setName('dataframe-id')
+                .setDescription('Dataframe we want to get the games of.')
+                .setRequired(true)
+            )
+            .addStringOption(option => 
+                option.setName('access-key')
+                .setDescription('The access key for the dataframe game we are deleting.')
+                .setRequired(true)
+            )
+        )
         .addSubcommand(subcommand =>
             subcommand
             .setName('sessions')
-            .setDescription('Get all the sessions of a dataframe.')) 
+            .setDescription('Get all the sessions of a dataframe.')
+            .addStringOption(option => 
+                option.setName('dataframe-id')
+                .setDescription('Dataframe we want to get the sessions of.')
+                .setRequired(true)
+            )) 
         .addSubcommand(subcommand =>
             subcommand
             .setName('actions')

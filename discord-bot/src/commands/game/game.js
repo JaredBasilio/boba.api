@@ -31,7 +31,12 @@ module.exports = {
             .setName('update')
             .setDescription('Update a game.')
             .addStringOption(option => 
-                option.setName('access_key')
+                option.setName('game-id')
+                    .setDescription('The game we want to update.')
+                    .setRequired(true)
+            )
+            .addStringOption(option => 
+                option.setName('access-key')
                     .setDescription('The access_key for the game.')
                     .setRequired(true)
             ))
@@ -40,7 +45,7 @@ module.exports = {
             .setName('delete')
             .setDescription('Delete a game.')
             .addStringOption(option => 
-                option.setName('access_key')
+                option.setName('access-key')
                     .setDescription('The access_key for the game.')
                     .setRequired(true)
             ))
@@ -61,6 +66,7 @@ module.exports = {
                     option.setName('game-id')
                         .setDescription('The game we want to add a dataframe to.')
                         .setRequired(true)
+                        .setAutocomplete(true)
                 )
                 .addStringOption(option => 
                     option.setName('access-key')
@@ -79,6 +85,19 @@ module.exports = {
             await execute(interaction);
         } else {
             console.log(`[WARNING] The subcommand ${command} is missing or the associated execute value function is missing.`)
+        }
+    },
+    async autocomplete(interaction) {
+        const command = interaction.options.getSubcommand();
+        const subcommandPath = path.join(__dirname, `subcommands/${command}.js`);
+        const { autocomplete } = require(subcommandPath);
+
+        if (autocomplete) {
+            const choices = await autocomplete(interaction);
+            await interaction.respond(choices);
+        } else {
+            console.log(`[WARNING] The subcommand ${command} is missing or the associated execute value function is missing.`)
+            await interaction.respond([]);
         }
     }
 }

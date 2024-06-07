@@ -4,7 +4,7 @@ const { formatReadableDateTime } = require('../../../utils/convertTime');
 module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
-        const game_id = interaction.options.getString('game');
+        const game_id = interaction.options.getString('game-id');
 
         let url;
         if (!game_id) {
