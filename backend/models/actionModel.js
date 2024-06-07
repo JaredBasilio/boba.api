@@ -19,5 +19,5 @@ const actionSchema = new Schema({
         type: Object,
         requires: true
     }
-})
+}, { timestamps: true })
 module.exports = mongoose.model('Action', actionSchema);
