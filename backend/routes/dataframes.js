@@ -5,7 +5,8 @@ const {
     updateDataframe,
     deleteDataframe,
     getSessions,
-    getActions
+    getActions,
+    checkAccessKey
 } = require('../controllers/dataframeController')
 
 const router = express.Router();
@@ -15,6 +16,9 @@ router.get('/', getDataframes);
 
 // GET single dataframe
 router.get('/:id', getDataframe);
+
+// GET single dataframe
+router.get('/:id/check-access', checkAccessKey);
 
 // DELETE dataframe
 router.delete('/:id', deleteDataframe);

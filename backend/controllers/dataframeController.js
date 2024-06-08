@@ -142,11 +142,40 @@ const getActions = async (req, res) => {
     res.status(200).json(sessions_out);
 }
 
+const checkAccessKey = async (req, res) => {
+    const { id } = req.params;
+    const { access_key } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: 'no dataframe found'});
+    }
+
+    if (!mongoose.Types.UUID.isValid(access_key)) {
+        return res.status(404).json({error: 'incorrect access key'});
+    }
+
+    // finding game
+    const dataframe = await Dataframe.findById(id);
+    if (!dataframe) {
+        return res.status(400).json({error: 'no dataframe found'});
+    }
+    const game_id = dataframe.game_id;
+    const game = await Game.findById(game_id);
+    if (!game) {
+        return res.status(400).json({error: 'no game found'});
+    }
+
+    return res.status(200).json({
+        hasAccess: game.access_key === access_key
+    })
+}
+
 module.exports = {
     deleteDataframe,
     getDataframe,
     getDataframes,
     updateDataframe,
     getSessions,
-    getActions
+    getActions,
+    checkAccessKey
 }
