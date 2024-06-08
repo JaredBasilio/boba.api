@@ -63,9 +63,22 @@ module.exports = {
                         })
                     }
 
+                    const dataframeCreationMessage = `
+                        Dataframe Creation Successful!
+                        
+                        Below are the details to your game:
+                        - **ID**: \`${json._id}\`
+                        - **Name**: \`${json.name}\`
+                        - **Author**: \`${json.author}\` (This is your profile_id)
+                        ${json.description ? `- **Description**: \`${json.description}\`\n` : ''}
+                        - **Schema**: \`${formattedSchema}\`
+                        - **Game ID**: \`${json.game_id}\`
+                        - **Created At**: \`${formatReadableDateTime(json.createdAt)}\`
+                        - **Updated At**: \`${formatReadableDateTime(json.updatedAt)}\`
+                    `;
+
                     modalInteraction.editReply({
-                        content:`
-                            Dataframe Creation Successful! Below are the details to your game:\nid: \`${json._id}\`\nname: \`${json.name}\`\nauthor: \`${json.author}\` (This is your profile_id)\ndescription: \`${json.description}\`\nschema: \`${formattedSchema}\`\ngame_id: \`${json.game_id}\`\ncreated_at: \`${formatReadableDateTime(json.createdAt)}\`\nupdated_at \`${formatReadableDateTime(json.updatedAt)}\`\n`,
+                        content: dataframeCreationMessage
                     })            
                 })
                 .catch((err) => {
