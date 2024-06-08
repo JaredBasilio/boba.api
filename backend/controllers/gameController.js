@@ -214,7 +214,7 @@ const createDataframe = async (req, res) => {
 
     // add doc to db
     try {
-        const existingDataframe = await Dataframe.findOne({ name });
+        const existingDataframe = await Dataframe.findOne({ name: name, game_id: id });
         if (existingDataframe) {
             return res.status(400).json({ error: 'Dataframe with this name already exists.' });
         }
