@@ -1,5 +1,9 @@
 module.exports = {
     async execute(interaction) {
-        const user = interaction.user.id;
+        await interaction.deferReply();
+        const dataframe_id = interaction.options.getString('dataframe-id');
+        const access_key = interaction.options.getString('access-key');
+
+        const json = await response.body.json();
     }
 }

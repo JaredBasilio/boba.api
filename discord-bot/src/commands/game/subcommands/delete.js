@@ -4,7 +4,7 @@ const { request } = require('undici');
 module.exports = {
     async execute(interaction) {
         const id = interaction.options.getString('game-id');
-        const accessKey = interaction.options.getString('access-key');
+        const access_key = interaction.options.getString('access-key');
 
         const accessResponse = await request(`https://bobaapi.up.railway.app/api/games/${id}/check-access`, {
             method: 'GET',
@@ -12,7 +12,7 @@ module.exports = {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                access_key: accessKey
+                access_key
             })
         });
 
@@ -40,7 +40,7 @@ module.exports = {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                access_key: accessKey
+                                access_key
                             })
                         })
 

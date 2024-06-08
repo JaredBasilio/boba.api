@@ -7,9 +7,10 @@ module.exports = {
             .setCustomId(`delete-${data}`)
             .setTitle(`Delete ${data.charAt(0).toUpperCase() + data.slice(1)}`);
         
-        const fields = [];
-
-        fields.push(new ActionRowBuilder().addComponents(confirmInput('delete', data).setRequired(true)));
+        const fields = [
+            new ActionRowBuilder()
+                .addComponents(confirmInput('delete', data)
+                .setRequired(true))];
 
         modal.addComponents(...fields);
 
