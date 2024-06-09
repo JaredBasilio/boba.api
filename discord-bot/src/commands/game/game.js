@@ -108,7 +108,7 @@ module.exports = {
 
         if (autocomplete) {
             const choices = await autocomplete(interaction);
-            await interaction.respond(choices);
+            await interaction.respond(choices.slice(0,25));
         } else {
             console.log(`[WARNING] The subcommand ${command} is missing or the associated execute value function is missing.`)
             await interaction.respond([]);

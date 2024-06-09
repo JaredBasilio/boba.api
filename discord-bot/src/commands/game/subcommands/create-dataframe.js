@@ -1,6 +1,5 @@
 const { inputModal } = require('../../../utils/modals/inputModal');
 const { formatReadableDateTime } = require('../../../utils/convertTime');
-const { request } = require('undici');
 
 module.exports = {
     async execute(interaction) {
@@ -9,17 +8,14 @@ module.exports = {
         const id = interaction.options.getString('game-id');
         const accessKey = interaction.options.getString('access-key');
 
-        const accessResponse = await request(`https://bobaapi.up.railway.app/api/games/${id}/check-access`, {
+        const accessResponse = await fetch(`https://bobaapi.up.railway.app/api/games/${id}/check-access?access_key=${accessKey}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                access_key: accessKey
-            })
         });
 
-        const accessJson = await accessResponse.body.json();
+        const accessJson = await accessResponse.json();
 
         if (!accessJson.hasAccess) {
             interaction.reply({
@@ -40,46 +36,56 @@ module.exports = {
                     const schema =  modalInteraction.fields.getTextInputValue('schemaInput');
                     const formattedSchema = schema.split(',').map(item => item.trim());
 
-                    // validates and uploads dataframe
-                    const createResponse = await request(`https://bobaapi.up.railway.app/api/games/${id}/dataframes`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            name: name,
-                            author: user,
-                            description: description,
-                            schema: formattedSchema,
-                            access_key: accessKey
+                    try {
+                        // validates and uploads dataframe
+                        const createResponse = await fetch(`https://bobaapi.up.railway.app/api/games/${id}/dataframes`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                name: name,
+                                author: user,
+                                description: description,
+                                schema: formattedSchema,
+                                access_key: accessKey
+                            })
                         })
-                    })
 
-                    const json = await createResponse.body.json();
+                        if (!createResponse.ok) {
+                            throw createResponse;
+                        }
 
-                    if (!json) {
-                        modalInteraction.reply({
-                            content: `There was an issue creating your dataframe.`,
+                        const json = await createResponse.json();
+                        let dataframeCreationMessage = 'Dataframe Creation Successful!\n\nBelow are the details to your game:\n'
+                        dataframeCreationMessage += 'Below are the details to your game:\n';
+                        dataframeCreationMessage += `- ID: ${json._id}\n`;
+                        dataframeCreationMessage += `- Name: ${json.name}\n`;
+                        dataframeCreationMessage += `- Author ${json.author} (This is your profile_id)\n`
+                        dataframeCreationMessage += json.description ? `- Description: ${json.description}\n` : '';
+                        dataframeCreationMessage += `- Schema: ${formattedSchema}`
+                        dataframeCreationMessage += `- Game ID: ${json.game._id}`
+                        dataframeCreationMessage += `- Created At: ${formatReadableDateTime(json.createdAt)}\n`;
+                        dataframeCreationMessage += `- Updated At: ${formatReadableDateTime(json.updatedAt)}\n`;
+
+                        await modalInteraction.editReply({
+                            content: `\`\`\`${dataframeCreationMessage}\`\`\``
+                        })
+                    } catch (error) {
+                        if (error instanceof Error) {
+                            await modalInteraction.editReply({
+                                content: error.toString(),
+                                ephemeral: true
+                            })
+                            return;
+                        }
+                        error.json().then(async (responseJson) => {                       
+                            await modalInteraction.editReply({
+                                content: `Error: ${responseJson.msg}`,
+                                ephemeral: true
+                            });
                         })
                     }
-
-                    const dataframeCreationMessage = `
-                        Dataframe Creation Successful!
-                        
-                        Below are the details to your game:
-                        - **ID**: \`${json._id}\`
-                        - **Name**: \`${json.name}\`
-                        - **Author**: \`${json.author}\` (This is your profile_id)
-                        ${json.description ? `- **Description**: \`${json.description}\`\n` : ''}
-                        - **Schema**: \`${formattedSchema}\`
-                        - **Game ID**: \`${json.game_id}\`
-                        - **Created At**: \`${formatReadableDateTime(json.createdAt)}\`
-                        - **Updated At**: \`${formatReadableDateTime(json.updatedAt)}\`
-                    `;
-
-                    modalInteraction.editReply({
-                        content: dataframeCreationMessage
-                    })            
                 })
                 .catch((err) => {
                     console.log(`Error: ${err}`)
@@ -87,20 +93,22 @@ module.exports = {
         }
     },
     async autocomplete(interaction) {
-        const option = interaction.options.getFocused(true).name;
-        if (option === 'game-id') {
-            const response = await request('https://bobaapi.up.railway.app/api/games', {
+        const option = interaction.options.getFocused(true);
+        if (option.name === 'game-id') {
+            const response = await fetch('https://bobaapi.up.railway.app/api/games', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
             })
-            const json = await response.body.json();
+            const json = await response.json();
 
-            return json.map((game) => ({
-                name: game.name,
-                value: game._id
-            }))
+            return json
+                .map((game) => ({
+                    name: game.name,
+                    value: game._id
+                    }))
+                .filter((game) => game.name.startsWith(option.value))
         }
         return [];
     }
