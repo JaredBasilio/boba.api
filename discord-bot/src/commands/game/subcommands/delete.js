@@ -1,22 +1,18 @@
 const { deleteModal } = require('../../../utils/modals/deleteModal');
-const { request } = require('undici');
 
 module.exports = {
     async execute(interaction) {
         const id = interaction.options.getString('game-id');
         const access_key = interaction.options.getString('access-key');
 
-        const accessResponse = await request(`https://bobaapi.up.railway.app/api/games/${id}/check-access`, {
+        const accessResponse = await fetch(`https://bobaapi.up.railway.app/api/games/${id}/check-access?access_key=${access_key}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                access_key
-            })
         });
 
-        const accessJson = await accessResponse.body.json();
+        const accessJson = await accessResponse.json();
 
         if (!accessJson.hasAccess) {
             interaction.reply({
@@ -33,26 +29,46 @@ module.exports = {
                     await modalInteraction.deferReply();
                     const confirmPhrase = modalInteraction.fields.getTextInputValue('deleteInput');
 
-                    if (confirmPhrase === `delete game`) {
-                        const response = await request(`https://bobaapi.up.railway.app/api/games/${id}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                access_key
+                    if (confirmPhrase === `DELETE GAME`) {
+                        try {
+                            const response = await fetch(`https://bobaapi.up.railway.app/api/games/${id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    access_key
+                                })
                             })
-                        })
 
-                        const json = await response.body.json();
+                            if (!response.ok) {
+                                throw response;
+                            }
 
-                        modalInteraction.editReply({
-                            content:`Deleted Game ${id}`,
-                            ephemeral: true
-                        })
+                            const json = await response.json();
+
+                            modalInteraction.editReply({
+                                content:`Deleted Game ${id}`,
+                                ephemeral: true
+                            })
+                        } catch (error) {
+                            if (error instanceof Error) {
+                                await modalInteraction.editReply({
+                                    content: error.toString(),
+                                    ephemeral: true
+                                })
+                                return;
+                            }
+                            error.json().then(async (responseJson) => {                       
+                                await modalInteraction.editReply({
+                                    content: `Error: ${responseJson.error}`,
+                                    ephemeral: true
+                                });
+                            })
+                        }
                     } else {
                         modalInteraction.reply({
-                            content: `Confirm Phrase incorrect`,
+                            content: `Confirm Phrase Incorrect`,
                             ephemeral: true
                         })
                     }
@@ -63,20 +79,21 @@ module.exports = {
         }
     },
     async autocomplete(interaction) {
-        const option = interaction.options.getFocused(true).name;
-        if (option === 'game-id') {
-            const response = await request('https://bobaapi.up.railway.app/api/games', {
+        const option = interaction.options.getFocused(true);
+        if (option.name === 'game-id') {
+            const response = await fetch('https://bobaapi.up.railway.app/api/games', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
             })
-            const json = await response.body.json();
+            const json = await response.json();
 
             return json.map((game) => ({
                 name: game.name,
                 value: game._id
             }))
+            .filter((game) => game.name.startsWith(option.value))
         }
         return [];
     }

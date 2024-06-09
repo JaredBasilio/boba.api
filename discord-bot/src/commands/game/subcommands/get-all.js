@@ -1,18 +1,17 @@
-const { request } = require('undici');
 const { formatReadableDateTime } = require('../../../utils/convertTime');
 
 module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        const response = await request('https://bobaapi.up.railway.app/api/games', {
+        const response = await fetch('https://bobaapi.up.railway.app/api/games', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
         })
 
-        const json = await response.body.json();
+        const json = await response.json();
         if (!json.length) {
             interaction.reply('No Games Found!');
         }

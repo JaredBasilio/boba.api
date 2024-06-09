@@ -1,4 +1,3 @@
-const { request } = require('undici');
 const { formatReadableDateTime } = require('../../../utils/convertTime');
 
 module.exports = {
@@ -6,14 +5,14 @@ module.exports = {
         await interaction.deferReply();
         const id = interaction.options.getString('game-id');
 
-        const response = await request(`https://bobaapi.up.railway.app/api/games/${id}`, {
+        const response = await fetch(`https://bobaapi.up.railway.app/api/games/${id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
         })
 
-        const json = await response.body.json();
+        const json = await response.json();
 
         let reply = ''
         reply += `Id: ${json._id}\n`
@@ -26,20 +25,22 @@ module.exports = {
         interaction.editReply(`\`\`\`\n${reply}\n\`\`\``);
     },
     async autocomplete(interaction) {
-        const option = interaction.options.getFocused(true).name;
-        if (option === 'game-id') {
-            const response = await request('https://bobaapi.up.railway.app/api/games', {
+        const option = interaction.options.getFocused(true);
+        if (option.name === 'game-id') {
+            const response = await fetch('https://bobaapi.up.railway.app/api/games', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
             })
-            const json = await response.body.json();
+            const json = await response.json();
 
-            return json.map((game) => ({
-                name: game.name,
-                value: game._id
-            }))
+            return json
+                .map((game) => ({
+                    name: game.name,
+                    value: game._id
+                }))
+                .filter((game) => game.name.startsWith(option.value))
         }
         return [];
     }

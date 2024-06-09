@@ -57,14 +57,14 @@ module.exports = {
                         }
 
                         const json = await createResponse.json();
+                        
                         let dataframeCreationMessage = 'Dataframe Creation Successful!\n\nBelow are the details to your game:\n'
-                        dataframeCreationMessage += 'Below are the details to your game:\n';
                         dataframeCreationMessage += `- ID: ${json._id}\n`;
                         dataframeCreationMessage += `- Name: ${json.name}\n`;
                         dataframeCreationMessage += `- Author ${json.author} (This is your profile_id)\n`
                         dataframeCreationMessage += json.description ? `- Description: ${json.description}\n` : '';
-                        dataframeCreationMessage += `- Schema: ${formattedSchema}`
-                        dataframeCreationMessage += `- Game ID: ${json.game._id}`
+                        dataframeCreationMessage += `- Schema: ${formattedSchema}\n`
+                        dataframeCreationMessage += `- Game ID: ${json.game_id}\n`
                         dataframeCreationMessage += `- Created At: ${formatReadableDateTime(json.createdAt)}\n`;
                         dataframeCreationMessage += `- Updated At: ${formatReadableDateTime(json.updatedAt)}\n`;
 
@@ -81,7 +81,7 @@ module.exports = {
                         }
                         error.json().then(async (responseJson) => {                       
                             await modalInteraction.editReply({
-                                content: `Error: ${responseJson.msg}`,
+                                content: `Error: ${responseJson.error}`,
                                 ephemeral: true
                             });
                         })

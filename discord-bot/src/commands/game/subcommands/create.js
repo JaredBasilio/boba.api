@@ -56,7 +56,7 @@ module.exports = {
                     }
                     error.json().then(async (responseJson) => {                       
                         await modalInteraction.editReply({
-                            content: `Error: ${responseJson.msg}`,
+                            content: `Error: ${responseJson.error}`,
                             ephemeral: true
                         });
                     })
