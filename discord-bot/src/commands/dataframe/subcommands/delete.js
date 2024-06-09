@@ -5,5 +5,7 @@ module.exports = {
         const access_key = interaction.options.getString('access-key');
 
         const json = await response.body.json();
+
+        interaction.reply('Not Implemented Yet');
     }
 }

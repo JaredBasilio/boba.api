@@ -7,8 +7,10 @@ module.exports = {
         .setDescription('Session functions.')
         .addSubcommand(subcommand =>
             subcommand
-            .setName('get')
-            .setDescription('Get the actions of a session'))
+            .setName('get-actions')
+            .setDescription('Get the actions of a session')
+            .addStringOption(option => option.setName('session-id').setDescription('Session we want actions from.'))
+        )
         ,
     async execute(interaction) {
         if (!interaction.isChatInputCommand()) return;

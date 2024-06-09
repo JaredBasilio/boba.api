@@ -1,4 +1,3 @@
-const { request } = require('undici');
 const { formatReadableDateTime } = require('../../../utils/convertTime');
 
 module.exports = {
@@ -6,14 +5,14 @@ module.exports = {
         await interaction.deferReply();
         const authorId = interaction.options.getUser('author').id;
 
-        const response = await request(`https://bobaapi.up.railway.app/api/dataframes?author=${authorId}`, {
+        const response = await fetch(`https://bobaapi.up.railway.app/api/dataframes?author=${authorId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
         })
 
-        const json = await response.body.json();
+        const json = await response.json();
 
         console.log(json);
         if (!json.length) {

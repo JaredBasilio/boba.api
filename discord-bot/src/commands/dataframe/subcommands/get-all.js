@@ -1,4 +1,3 @@
-const { request } = require('undici');
 const { formatReadableDateTime } = require('../../../utils/convertTime');
 
 module.exports = {
@@ -15,14 +14,14 @@ module.exports = {
             url = `https://bobaapi.up.railway.app/api/games/${game_id}/dataframes`
         }
 
-        const response = await request(url, {
+        const response = await fetch(url, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
         })
 
-        const json = await response.body.json();
+        const json = await response.json();
 
         if (!json.length) {
             interaction.reply('No Dataframes Found!');

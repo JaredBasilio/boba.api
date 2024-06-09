@@ -1,7 +1,5 @@
 const { AttachmentBuilder } = require('discord.js');
-const { request } = require('undici');
 const {generateFileName} = require('../../../utils/convertTime')
-const fs = require('fs');
 
 module.exports = {
     async execute(interaction) {
@@ -10,14 +8,14 @@ module.exports = {
 
         const dataframe_id = interaction.options.getString('dataframe-id');
 
-        const response = await request(`https://bobaapi.up.railway.app/api/dataframes/${dataframe_id}/actions`, {
+        const response = await fetch(`https://bobaapi.up.railway.app/api/dataframes/${dataframe_id}/actions`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
         })
 
-        const json = await response.body.json();
+        const json = await response.json();
 
         if (!json.length) {
             interaction.reply('No Actions Found!');
