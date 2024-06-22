@@ -5,6 +5,11 @@ const Schema = mongoose.Schema
 const sessionSchema = new Schema({
     _id: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        auto: true
+    },
+    session_id: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     player: {

@@ -261,10 +261,12 @@ const createSession = async (req, res) => {
     // add doc to db
     try {
         const sessions = []
-        const id = new mongoose.Types.ObjectId();
+        const created_id = new mongoose.Types.ObjectId();
+
+        // make the sessions
         for (const dataframe_id of dataframe_ids) {
             const session = await Session.create({
-                _id: id,
+                session_id: created_id,
                 player,
                 dataframe_id,
                 ip_address: req.ip
