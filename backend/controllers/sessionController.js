@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 /** Actions */
 const createAction = async (req, res) => {
     const { id } = req.params;
-    const { access_key, action, dataframe_id, player } = req.body;
+    const { access_key, action, dataframe_id } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({error: 'no session found'});
@@ -37,8 +37,6 @@ const createAction = async (req, res) => {
             dataframe_id,
             session_id: id,
             action,
-            player,
-            ip_address: req.ip,
         })
         res.status(200).json(createdAction);
     } catch (error) {
@@ -55,7 +53,9 @@ const getActions = async (req, res) => {
         return res.status(404).json({error: 'no session found'});
     }
 
-    const actions = await Action.find({session_id: id});
+    const actions = await Action.find({session_id: id}).populate('session_id');;
+
+    // JOIN THE SESSION HERE
 
     res.status(200).json(actions);
 }

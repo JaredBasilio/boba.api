@@ -266,7 +266,8 @@ const createSession = async (req, res) => {
             const session = await Session.create({
                 _id: id,
                 player,
-                dataframe_id
+                dataframe_id,
+                ip_address: req.ip
             })
             sessions.push(session);
         }

@@ -7,24 +7,17 @@ const actionSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         auto: true
     },
-    session_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
+    session_id: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Session',
+        required: true,
     },
     dataframe_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    player: {
-        type: String,
-        required: true
-    },
     action: {
         type: Object,
-        requires: true
-    },
-    ip_address: {
-        type: String,
         requires: true
     }
 }, { timestamps: true })

@@ -14,6 +14,10 @@ const sessionSchema = new Schema({
     dataframe_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
+    },
+    ip_address: {
+        type: String,
+        required: true
     }
 }, { timestamps: true })
 
