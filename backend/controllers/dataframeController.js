@@ -135,7 +135,7 @@ const getActions = async (req, res) => {
 
     for (const session of sessions) {
         const { _id } = session;
-        const actions = await Action.find({ session_id: _id });
+        const actions = await Action.find({ session_id: _id }).populate('session_id');
         sessions_out.push(...actions);
     }
 

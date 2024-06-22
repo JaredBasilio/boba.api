@@ -8,7 +8,10 @@ module.exports = {
 
         const dataframe_id = interaction.options.getString('dataframe-id');
 
-        const response = await fetch(`https://bobaapi.up.railway.app/api/dataframes/${dataframe_id}/actions`, {
+        const testingEnv = `http://localhost:4000/api/dataframes/${dataframe_id}/actions`;
+        const prodEnv = `https://bobaapi.up.railway.app/api/dataframes/${dataframe_id}/actions`
+
+        const response = await fetch(prodEnv, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
